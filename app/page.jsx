@@ -1,6 +1,12 @@
-// app/page.tsx or app/page.js
+import React from 'react'
 import { redirect } from 'next/navigation';
-
-export default function Home() {
+function page() {
   redirect('/dashboard');
+  return (
+    <div>
+      
+    </div>
+  )
 }
+
+export default page
