@@ -31,7 +31,7 @@ export async function POST(req) {
 
     const openai = new OpenAI({
       baseURL: 'https://openrouter.ai/api/v1',
-      apiKey: process.env.OPENROUTER_API_KEY,
+      apiKey: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,
     });
 
     const completion = await openai.chat.completions.create({
