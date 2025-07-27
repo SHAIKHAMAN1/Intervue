@@ -30,6 +30,8 @@ Intervue is a modern web app built with **Next.js**, **Supabase**, **Vapi**, and
 ---
 
 ## 📸 Screenshots
+<img width="1913" height="965" alt="Screenshot 2025-07-27 185907" src="https://github.com/user-attachments/assets/1d1720c6-661f-4eff-9fe6-e5812a1abbf3" />
+<img width="1918" height="963" alt="Screenshot 2025-07-27 185925" src="https://github.com/user-attachments/assets/c5643a19-bceb-4ff5-b064-9e4a7f254482" />
 <img width="1919" height="1017" alt="Screenshot 2025-07-27 185508" src="https://github.com/user-attachments/assets/718c420a-d1b3-454c-9f9d-2b8e2ca19246" />
 <img width="1919" height="1017" alt="Screenshot 2025-07-27 182421" src="https://github.com/user-attachments/assets/f71f0125-cf9c-4973-a69d-f46ef081aac6" />
 <img width="1919" height="1020" alt="Screenshot 2025-07-27 182436" src="https://github.com/user-attachments/assets/7514c1cd-f26e-4725-bc8c-b546c35cdc11" /><img width="1919" height="1019" alt="Screenshot 2025-07-27 182456" src="https://github.com/user-attachments/assets/ccd159ff-7060-42d7-b904-4899bfe281c0" />
