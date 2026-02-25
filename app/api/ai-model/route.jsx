@@ -35,7 +35,7 @@ export async function POST(req) {
     });
 
     const completion = await openai.chat.completions.create({
-      model: 'deepseek/deepseek-chat-v3-0324:free', // ✅ Ensure this is valid per OpenRouter
+      model: 'nvidia/nemotron-3-nano-30b-a3b:free', // ✅ Ensure this is valid per OpenRouter
       messages: [
         {
           role: 'user',
