@@ -1,10 +1,5 @@
 import { QUESTIONS_PROMPT } from "@/services/Constants";
 import { NextResponse } from "next/server";
-import Cohere from "cohere-ai";
-
-const cohere = new Cohere({
-  token: process.env.COHERE_API_KEY,
-});
 
 export async function POST(req) {
   try {
@@ -41,28 +36,38 @@ export async function POST(req) {
       .replace("{{duration}}", duration)
       .replace("{{type}}", formattedType);
 
-    const response = await cohere.chat({
-      model: "command-r", // Best free model
-      message: FINAL_PROMPT,
-      temperature: 0.7,
-      max_tokens: 600,
+    const response = await fetch("https://api.cohere.ai/v1/chat", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.COHERE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "command-r",
+        message: FINAL_PROMPT,
+        temperature: 0.7,
+        max_tokens: 600,
+      }),
     });
 
-    if (!response?.text) {
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Cohere Error:", data);
       return NextResponse.json(
-        { error: "No response from Cohere" },
+        { error: data.message || "Cohere API error" },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
-      content: response.text.trim(),
+      content: data.text,
     });
 
   } catch (error) {
-    console.error("Cohere Error:", error);
+    console.error("Server Crash:", error);
     return NextResponse.json(
-      { error: "Failed to generate interview questions" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
