@@ -1,5 +1,10 @@
 import { QUESTIONS_PROMPT } from "@/services/Constants";
 import { NextResponse } from "next/server";
+import Cohere from "cohere-ai";
+
+const cohere = new Cohere({
+  token: process.env.COHERE_API_KEY,
+});
 
 export async function POST(req) {
   try {
@@ -14,8 +19,15 @@ export async function POST(req) {
       (Array.isArray(type) && type.length === 0)
     ) {
       return NextResponse.json(
-        { error: "Missing one or more required fields" },
+        { error: "Missing required fields" },
         { status: 400 }
+      );
+    }
+
+    if (!process.env.COHERE_API_KEY) {
+      return NextResponse.json(
+        { error: "Cohere API key missing" },
+        { status: 500 }
       );
     }
 
@@ -29,44 +41,26 @@ export async function POST(req) {
       .replace("{{duration}}", duration)
       .replace("{{type}}", formattedType);
 
-    console.log("FINAL PROMPT:", FINAL_PROMPT);
+    const response = await cohere.chat({
+      model: "command-r", // Best free model
+      message: FINAL_PROMPT,
+      temperature: 0.7,
+      max_tokens: 600,
+    });
 
-    const response = await fetch(
-      "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.HF_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          inputs: `<s>[INST] ${FINAL_PROMPT} [/INST]`,
-          parameters: {
-            max_new_tokens: 500,
-            temperature: 0.7,
-            return_full_text: false,
-          },
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error("HF ERROR:", data);
+    if (!response?.text) {
       return NextResponse.json(
-        { error: "HuggingFace API Error" },
+        { error: "No response from Cohere" },
         { status: 500 }
       );
     }
 
-    // HF returns array format
-    const generatedText = data[0]?.generated_text;
+    return NextResponse.json({
+      content: response.text.trim(),
+    });
 
-    return NextResponse.json({ content: generatedText });
-
-  } catch (e) {
-    console.error("API Error:", e);
+  } catch (error) {
+    console.error("Cohere Error:", error);
     return NextResponse.json(
       { error: "Failed to generate interview questions" },
       { status: 500 }
